@@ -48,11 +48,23 @@ typedef union {
 #endif /* Z_THREAD_LOCAL */
 
 #ifdef __cplusplus
-/* Zephyr requires an int main(void) signature with C linkage for the application main if present */
+
+#if (!__STDC_HOSTED__)
+/*
+ * Zephyr requires an int main(void) signature with C linkage for the
+ * application main if present for freestanding execution.
+ *
+ * However, main cannot exist inside extern "C" linkage declarations,
+ * as that is forbidden by the C++ standard.
+ * See Section 6.9.3.1 of ISO/IEC 14882:2024.
+ *
+ * This restriction is relaxed for freestanding code, as main
+ * is not treated specially in these circumstances, so only include it
+ * when not hosted.
+ */
 extern int main(void);
 #endif
 
-#ifdef __cplusplus
 }
 #endif
 
